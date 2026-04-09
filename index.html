@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>ParserGen | The Digital Atheneum of Formal Grammars</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#f7f9fb",
+                        "surface-container": "#e8eff3",
+                        "primary": "#426086",
+                        "inverse-on-surface": "#9a9d9f",
+                        "on-tertiary": "#faf8ff",
+                        "error": "#9f403d",
+                        "secondary-container": "#d5e3fc",
+                        "error-container": "#fe8983",
+                        "on-tertiary-fixed-variant": "#545873",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#ccd0ef",
+                        "surface-bright": "#f7f9fb",
+                        "outline-variant": "#a9b4b9",
+                        "tertiary-dim": "#4d526c",
+                        "on-tertiary-fixed": "#383c55",
+                        "secondary-fixed-dim": "#c7d5ed",
+                        "secondary": "#526074",
+                        "primary-fixed-dim": "#bbd6ff",
+                        "on-secondary": "#f8f8ff",
+                        "primary-fixed": "#d3e4ff",
+                        "error-dim": "#4e0309",
+                        "on-primary-fixed-variant": "#3f5d83",
+                        "primary-container": "#d3e4ff",
+                        "surface-container-highest": "#d9e4ea",
+                        "on-surface": "#2a3439",
+                        "surface": "#f7f9fb",
+                        "primary-dim": "#365479",
+                        "on-secondary-container": "#455367",
+                        "surface-container-high": "#e1e9ee",
+                        "surface-dim": "#cfdce3",
+                        "on-secondary-fixed": "#324053",
+                        "outline": "#717c82",
+                        "on-primary": "#f6f7ff",
+                        "secondary-fixed": "#d5e3fc",
+                        "inverse-primary": "#b3d1fd",
+                        "tertiary": "#595e78",
+                        "surface-container-low": "#f0f4f7",
+                        "on-primary-container": "#355379",
+                        "on-background": "#2a3439",
+                        "inverse-surface": "#0b0f10",
+                        "surface-tint": "#426086",
+                        "secondary-dim": "#465468",
+                        "on-primary-fixed": "#214165",
+                        "on-error-container": "#752121",
+                        "tertiary-fixed": "#dadefe",
+                        "surface-variant": "#d9e4ea",
+                        "on-error": "#fff7f6",
+                        "on-surface-variant": "#566166",
+                        "on-secondary-fixed-variant": "#4e5c71",
+                        "tertiary-container": "#dadefe",
+                        "on-tertiary-container": "#4a4f69"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Space Grotesk"]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+
+<body
+    class="bg-background text-on-background selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col">
+    <!-- TopNavBar -->
+    <nav class="w-full border-b-0 bg-[#f7f9fb] sticky top-0 z-50">
+        <div class="flex justify-between items-center max-w-screen-2xl mx-auto px-12 py-4">
+            <div class="flex items-center gap-8">
+                <span
+                    class="text-xl font-bold text-[#0D1B2A] tracking-widest font-['Manrope'] cursor-pointer"
+                    id="logo-btn">ParserGen</span>
+                <div class="hidden md:flex gap-6">
+                    <a class="nav-link font-['Manrope'] font-semibold tracking-tight text-[#426086] border-b-2 border-[#426086] pb-1"
+                        href="#" data-target="home-view">Home</a>
+                    <a class="nav-link font-['Manrope'] font-semibold tracking-tight text-[#717c82] hover:text-[#2a3439] transition-colors"
+                        href="#" data-target="ll1-view">LL(1) Parser</a>
+                    <a class="nav-link font-['Manrope'] font-semibold tracking-tight text-[#717c82] hover:text-[#2a3439] transition-colors"
+                        href="#" data-target="lr0-view">LR(0) Parser</a>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="flex gap-2">
+                    <button class="p-2 hover:bg-[#e1e9ee] rounded transition-all duration-200"
+                        id="keyboard-toggle">
+                        <span class="material-symbols-outlined text-[#426086]"
+                            data-icon="keyboard">keyboard</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow w-full">
+        <!-- HOME VIEW -->
+        <div id="home-view" class="view-section active">
+            <!-- Hero: Intro to Parsing -->
+            <section class="max-w-screen-2xl mx-auto px-12 py-24 grid grid-cols-1 md:grid-cols-12 gap-16 items-center">
+                <div class="md:col-span-7">
+                    <h1 class="text-6xl font-headline font-extrabold text-on-surface tracking-tight leading-tight mb-8">
+                        What is <span class="text-primary">Parsing?</span>
+                    </h1>
+                    <p class="text-xl text-on-surface-variant font-body leading-relaxed max-w-2xl mb-10">
+                        Parsing is the process of analyzing a string of symbols, either in natural language, computer
+                        languages or data structures, conforming to the rules of a formal grammar.
+                    </p>
+                </div>
+                <div class="md:col-span-5 relative">
+                    <div
+                        class="bg-surface-container-lowest p-4 rounded shadow-2xl rotate-2 border border-outline-variant/10">
+                        <img alt="Minimalist academic diagram of the parsing process"
+                            class="w-full aspect-square object-cover opacity-80"
+                            data-alt="A clean, blueprint-style diagram showing flow from Grammar to Parser Generator to Parser and Intermediate Representation."
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFhw6jM5ZUCeCjXwb_mSRCFYmCtHJV0HriAcdw0XW8u3j_t6wD-2raZSYIkj7Xk0AEVaIH__tiF7mNRAnGrDtkeCxdiCqqLGvU3k4hyylAOhukWeFWOJZfXL-21RwtBjtib6pgA4jeZve2mSTEBraDyCnsWzq94fvJeI4vjo9ctTenOGCwRt1DoJ4E1HvYk8dOxR8CG0gnb1laWzwr_34_RcXJwq3E_AIg8VN5Mh6JzQTx9ibR_ZApLzF6eECV0925ue4XQL1LG3pv" />
+                    </div>
+                    <div
+                        class="absolute -bottom-8 -left-8 bg-surface-container-highest p-6 rounded shadow-lg max-w-[200px]">
+                        <span
+                            class="font-label text-[10px] text-outline uppercase tracking-widest block mb-2">Computational
+                            Complexity</span>
+                        <p class="font-headline font-bold text-on-surface">O(n) Optimal Traversal</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LL(1) & LR(0) Comparison Grid -->
+            <section class="bg-surface-container-low py-24">
+                <div class="max-w-screen-2xl mx-auto px-12">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- LL(1) Section -->
+                        <div
+                            class="bg-surface-container-lowest p-12 border-b-4 border-primary shadow-sm relative overflow-hidden">
+                            <span
+                                class="font-label text-primary font-bold tracking-tighter text-4xl mb-4 block">LL(1)</span>
+                            <h3 class="font-headline text-2xl font-bold mb-6">Top-Down Predictive Parsing</h3>
+                            <p class="text-on-surface-variant font-body mb-8 leading-relaxed">
+                                LL(1) parsers work by building the parse tree from the top down, from the start symbol
+                                to the leaves.
+                                The "(1)" denotes using a single lookahead token to make parsing decisions, ensuring
+                                deterministic execution for specific grammar subsets.
+                            </p>
+                            <div
+                                class="bg-surface-container-highest p-6 rounded-sm font-label text-sm text-on-surface-variant mb-8">
+                                <ul class="space-y-3">
+                                    <li class="flex items-start gap-2">
+                                        <span class="material-symbols-outlined text-primary text-lg"
+                                            data-icon="check_circle">check_circle</span>
+                                        <span>No Left Recursion allowed</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="material-symbols-outlined text-primary text-lg"
+                                            data-icon="check_circle">check_circle</span>
+                                        <span>Grammar must be Left-Factored</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="material-symbols-outlined text-primary text-lg"
+                                            data-icon="check_circle">check_circle</span>
+                                        <span>Constructed via First and Follow sets</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <a class="text-primary font-headline font-bold flex items-center gap-2 hover:gap-4 transition-all nav-btn"
+                                href="#" data-target="ll1-view">
+                                View LL(1) Generator <span class="material-symbols-outlined"
+                                    data-icon="arrow_forward">arrow_forward</span>
+                            </a>
+                        </div>
+
+                        <!-- LR(0) Section -->
+                        <div
+                            class="bg-surface-container-lowest p-12 border-b-4 border-secondary-dim shadow-sm relative overflow-hidden">
+                            <span
+                                class="font-label text-secondary font-bold tracking-tighter text-4xl mb-4 block">LR(0)</span>
+                            <h3 class="font-headline text-2xl font-bold mb-6">Bottom-Up Shift-Reduce Parsing</h3>
+                            <p class="text-on-surface-variant font-body mb-8 leading-relaxed">
+                                LR(0) parsers build the parse tree from the bottom up, identifying the smallest units
+                                and reducing them toward the start symbol.
+                                They use a Finite State Automaton (DFA) to track the state of the stack without needing
+                                lookahead for initial decisions.
+                            </p>
+                            <div
+                                class="bg-surface-container-highest p-6 rounded-sm font-label text-sm text-on-surface-variant mb-8">
+                                <ul class="space-y-3">
+                                    <li class="flex items-start gap-2">
+                                        <span class="material-symbols-outlined text-secondary text-lg"
+                                            data-icon="check_circle">check_circle</span>
+                                        <span>Handles more grammars than LL(1)</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="material-symbols-outlined text-secondary text-lg"
+                                            data-icon="check_circle">check_circle</span>
+                                        <span>State-based transition table</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="material-symbols-outlined text-secondary text-lg"
+                                            data-icon="check_circle">check_circle</span>
+                                        <span>Foundation for SLR, LALR, and LR(1)</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <a class="text-secondary font-headline font-bold flex items-center gap-2 hover:gap-4 transition-all nav-btn"
+                                href="#" data-target="lr0-view">
+                                View LR(0) Generator <span class="material-symbols-outlined"
+                                    data-icon="arrow_forward">arrow_forward</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- How to Use This Tool Section -->
+            <section class="bg-surface-container-low py-24">
+                <div class="max-w-screen-2xl mx-auto px-12">
+                    <div class="text-center mb-16">
+                        <h2 class="text-4xl font-headline font-extrabold text-on-surface mb-4">Step-by-Step Guide</h2>
+                        <div class="w-24 h-1 bg-primary mx-auto"></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div
+                            class="bg-surface-container-lowest p-8 border border-outline-variant/20 shadow-sm flex flex-col items-start h-full">
+                            <div class="w-12 h-12 bg-primary flex items-center justify-center mb-6">
+                                <span class="font-label text-2xl font-bold text-on-primary">1</span>
+                            </div>
+                            <h4 class="font-headline font-bold text-xl mb-4">Enter Grammar</h4>
+                            <p class="text-on-surface-variant font-body text-sm leading-relaxed">
+                                Navigate to the LL(1) or LR(0) tab and enter your context-free grammar productions. Use
+                                uppercase for non-terminals and lowercase / symbols for terminals.
+                            </p>
+                        </div>
+                        <div
+                            class="bg-surface-container-lowest p-8 border border-outline-variant/20 shadow-sm flex flex-col items-start h-full">
+                            <div class="w-12 h-12 bg-primary flex items-center justify-center mb-6">
+                                <span class="font-label text-2xl font-bold text-on-primary">2</span>
+                            </div>
+                            <h4 class="font-headline font-bold text-xl mb-4">Generate Tables</h4>
+                            <p class="text-on-surface-variant font-body text-sm leading-relaxed">
+                                Click "Compute" to generate FIRST/FOLLOW sets, parsing tables, item sets, and all
+                                intermediate results.
+                            </p>
+                        </div>
+                        <div
+                            class="bg-surface-container-lowest p-8 border border-outline-variant/20 shadow-sm flex flex-col items-start h-full">
+                            <div class="w-12 h-12 bg-primary flex items-center justify-center mb-6">
+                                <span class="font-label text-2xl font-bold text-on-primary">3</span>
+                            </div>
+                            <h4 class="font-headline font-bold text-xl mb-4">Parse Input</h4>
+                            <p class="text-on-surface-variant font-body text-sm leading-relaxed">
+                                Enter an input string and watch the parser simulate step-by-step, showing stack
+                                operations, actions, and the parsing trace.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Supervisor Section -->
+            <section class="py-24 max-w-screen-2xl mx-auto px-12">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-16 items-start">
+                    <div class="md:col-span-4 flex flex-col items-start">
+                        <h2 class="text-4xl font-headline font-extrabold tracking-tight mb-12 text-on-surface">
+                            Supervisor</h2>
+                        <div class="flex flex-col items-start gap-6">
+                            <div class="w-24 h-24">
+                                <img alt="Supervisor Profile" class="w-full h-full object-cover rounded-full"
+                                    src="assets/supervisor-pfp.png"
+                                    onerror="this.src='https://via.placeholder.com/150'" />
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-headline font-bold text-on-surface">Ms. Rabeya Khatun</h3>
+                                <p class="text-on-surface-variant font-body leading-relaxed mt-1">Lecturer, Department
+                                    of Computer Science and Engineering, DIU</p>
+                            </div>
+                            <a href="mailto:khatun.cse@diu.edu.bd"
+                                class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shadow-sm text-outline hover:text-primary transition-colors cursor-pointer decoration-none">
+                                <span class="material-symbols-outlined text-xl" data-icon="mail">mail</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="md:col-span-8 space-y-12">
+                        <!-- Team Members -->
+                        <div class="flex items-start gap-8 group">
+                            <div class="relative flex-shrink-0">
+                                <div class="transition-colors overflow-hidden">
+                                    <img alt="Jian"
+                                        class="w-16 h-16 rounded-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+                                        src="assets/jian-pfp.png"
+                                        onerror="this.src='https://via.placeholder.com/150'" />
+                                </div>
+                                <span
+                                    class="absolute -bottom-1 -right-1 font-label text-3xl font-bold text-outline-variant/60 group-hover:text-primary transition-colors">01</span>
+                            </div>
+                            <div>
+                                <h4 class="font-headline font-bold text-xl text-on-surface mb-2">Jian</h4>
+                                <p class="text-on-surface-variant font-body leading-relaxed">Managed the UI design and
+                                    optimized First-Set parser calculations</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-8 group">
+                            <div class="relative flex-shrink-0">
+                                <div class="transition-colors overflow-hidden">
+                                    <img alt="Shanita"
+                                        class="w-16 h-16 rounded-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+                                        src="assets/shanita-pfp.png"
+                                        onerror="this.src='https://via.placeholder.com/150'" />
+                                </div>
+                                <span
+                                    class="absolute -bottom-1 -right-1 font-label text-3xl font-bold text-outline-variant/60 group-hover:text-primary transition-colors">02</span>
+                            </div>
+                            <div>
+                                <h4 class="font-headline font-bold text-xl text-on-surface mb-2">Shanita</h4>
+                                <p class="text-on-surface-variant font-body leading-relaxed">Designed visual assets
+                                    while computing Follow-Set grammar transitions</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-8 group">
+                            <div class="relative flex-shrink-0">
+                                <div class="transition-colors overflow-hidden">
+                                    <img alt="Jiaur"
+                                        class="w-16 h-16 rounded-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+                                        src="assets/jia-pfp.png" onerror="this.src='https://via.placeholder.com/150'" />
+                                </div>
+                                <span
+                                    class="absolute -bottom-1 -right-1 font-label text-3xl font-bold text-outline-variant/60 group-hover:text-primary transition-colors">03</span>
+                            </div>
+                            <div>
+                                <h4 class="font-headline font-bold text-xl text-on-surface mb-2">Jiaur</h4>
+                                <p class="text-on-surface-variant font-body leading-relaxed">Conducted system testing
+                                    and authored comprehensive technical documentation</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-8 group">
+                            <div class="relative flex-shrink-0">
+                                <div class="transition-colors overflow-hidden">
+                                    <img alt="Naim"
+                                        class="w-16 h-16 rounded-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+                                        src="assets/naim-pfp.png"
+                                        onerror="this.src='https://via.placeholder.com/150'" />
+                                </div>
+                                <span
+                                    class="absolute -bottom-1 -right-1 font-label text-3xl font-bold text-outline-variant/60 group-hover:text-primary transition-colors">04</span>
+                            </div>
+                            <div>
+                                <h4 class="font-headline font-bold text-xl text-on-surface mb-2">Naim</h4>
+                                <p class="text-on-surface-variant font-body leading-relaxed">Engineered LR(0) item
+                                    collections for automated state machine transitions</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-8 group">
+                            <div class="relative flex-shrink-0">
+                                <div class="transition-colors overflow-hidden">
+                                    <img alt="Habib"
+                                        class="w-16 h-16 rounded-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+                                        src="assets/habib-pfp.png"
+                                        onerror="this.src='https://via.placeholder.com/150'" />
+                                </div>
+                                <span
+                                    class="absolute -bottom-1 -right-1 font-label text-3xl font-bold text-outline-variant/60 group-hover:text-primary transition-colors">05</span>
+                            </div>
+                            <div>
+                                <h4 class="font-headline font-bold text-xl text-on-surface mb-2">Habib</h4>
+                                <p class="text-on-surface-variant font-body leading-relaxed">Constructed canonical
+                                    parsing tables to ensure efficient syntax analysis</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- LL(1) VIEW -->
+        <div id="ll1-view" class="view-section hidden max-w-screen-2xl mx-auto px-12 py-12">
+            <div class="mb-12">
+                <h1 class="text-5xl font-extrabold tracking-tight text-on-surface mb-2 font-headline">LL(1) Parser
+                    Analysis</h1>
+                <p class="text-secondary max-w-2xl leading-relaxed font-body">Systematic derivation of FIRST and FOLLOW
+                    sets for Context-Free Grammars to determine LL(1) compatibility and parse table construction.</p>
+            </div>
+
+            <div class="space-y-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Grammar Input -->
+                    <section
+                        class="bg-surface-container-lowest p-8 shadow-sm border border-outline-variant/10 flex flex-col h-full">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-bold tracking-tight uppercase label-text text-primary">Grammar Input
+                            </h2>
+                            <span class="material-symbols-outlined text-outline">edit_note</span>
+                        </div>
+                        <div class="flex-grow flex flex-col">
+                            <div class="relative flex-grow mb-6">
+                                <textarea id="ll1-grammar-input"
+                                    class="w-full h-80 bg-surface-container-low border-b-2 border-outline focus:border-primary focus:bg-surface-container-lowest transition-all p-4 font-mono text-sm leading-relaxed outline-none resize-none"
+                                    placeholder="E -> T E'&#10;E' -> + T E' | ε&#10;T -> F T'&#10;T' -> * F T' | ε&#10;F -> ( E ) | id">E -> T E'&#10;E' -> + T E' | ε&#10;T -> F T'&#10;T' -> * F T' | ε&#10;F -> ( E ) | id</textarea>
+                                <div class="absolute bottom-4 right-4 flex gap-2">
+                                    <button id="ll1-clear-btn"
+                                        class="bg-surface-container-high px-3 py-1 label-text text-[10px] font-bold uppercase tracking-tighter text-on-surface-variant hover:bg-surface-container-highest transition-colors">Clear</button>
+                                    <button id="ll1-process-btn"
+                                        class="bg-primary text-on-primary px-3 py-1 label-text text-[10px] font-bold uppercase tracking-tighter hover:bg-primary-dim transition-colors">Process</button>
+                                </div>
+                            </div>
+                            <p class="text-xs text-on-surface-variant/70 leading-relaxed mt-2">
+                                Enter productions in the form A -> α | β. Use uppercase letters (optionally with ′) for
+                                non-terminals and lowercase letters or symbols for terminals. Represent the empty string
+                                by ε. The grammar must be free of left recursion and left factoring.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Grammar Details (Placeholder) -->
+                    <section class="bg-surface-container-lowest p-8 shadow-sm border border-outline-variant/10 h-full">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-bold tracking-tight uppercase label-text text-primary">Grammar
+                                Details</h2>
+                        </div>
+                        <div id="ll1-grammar-details" class="space-y-4">
+                            <div
+                                class="p-3 border border-outline-variant/20 flex justify-between items-center bg-surface-container-low/30">
+                                <span class="label-text text-xs font-bold uppercase text-outline">Start Symbol</span>
+                                <span class="font-mono text-sm font-bold text-primary">E</span>
+                            </div>
+                            <div
+                                class="p-3 border border-outline-variant/20 flex justify-between items-center bg-surface-container-low/30">
+                                <span class="label-text text-xs font-bold uppercase text-outline">Terminals</span>
+                                <span class="font-mono text-sm font-bold text-primary">+, *, (, ), id, $</span>
+                            </div>
+                            <div
+                                class="p-3 border border-outline-variant/20 flex justify-between items-center bg-surface-container-low/30">
+                                <span class="label-text text-xs font-bold uppercase text-outline">Non-Terminals</span>
+                                <span class="font-mono text-sm font-bold text-primary">E, E', T, T', F</span>
+                            </div>
+                            <div class="p-3 border border-outline-variant/20 bg-surface-container-low/30">
+                                <span
+                                    class="label-text text-xs font-bold uppercase text-outline block mb-3">Productions</span>
+                                <div
+                                    class="space-y-1 font-mono text-xs text-secondary pl-2 border-l-2 border-primary/20">
+                                    <div>E → T E'</div>
+                                    <div>E' → + T E' | ε</div>
+                                    <div>T → F T'</div>
+                                    <div>T' → * F T' | ε</div>
+                                    <div>F → ( E ) | id</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- First Sets -->
+                    <section class="bg-surface-container-lowest p-8 shadow-sm border border-outline-variant/10">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-bold tracking-tight uppercase label-text text-primary">First Sets
+                            </h2>
+                            <span class="material-symbols-outlined text-outline">function</span>
+                        </div>
+                        <div id="ll1-first-sets" class="space-y-4">
+                            <div class="flex items-center border-b border-surface-container py-2">
+                                <span class="w-12 font-bold font-mono text-on-surface">E</span>
+                                <span
+                                    class="material-symbols-outlined text-[14px] mx-4 text-outline">arrow_forward</span>
+                                <span class="flex gap-2">
+                                    <span
+                                        class="px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full label-text text-[10px] font-bold">(</span>
+                                    <span
+                                        class="px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full label-text text-[10px] font-bold">id</span>
+                                </span>
+                            </div>
+                            <div class="flex items-center border-b border-surface-container py-2">
+                                <span class="w-12 font-bold font-mono text-on-surface">E'</span>
+                                <span
+                                    class="material-symbols-outlined text-[14px] mx-4 text-outline">arrow_forward</span>
+                                <span class="flex gap-2">
+                                    <span
+                                        class="px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full label-text text-[10px] font-bold">+</span>
+                                    <span
+                                        class="px-2 py-0.5 bg-surface-container-highest text-outline rounded-full label-text text-[10px] font-bold">ε</span>
+                                </span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Follow Sets -->
+                    <section class="bg-surface-container-lowest p-8 shadow-sm border border-outline-variant/10">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-bold tracking-tight uppercase label-text text-primary">Follow Sets
+                            </h2>
+                            <span class="material-symbols-outlined text-outline">rebase_edit</span>
+                        </div>
+                        <div id="ll1-follow-sets" class="space-y-4">
+                            <div class="flex items-center border-b border-surface-container py-2">
+                                <span class="w-12 font-bold font-mono text-on-surface">E</span>
+                                <span
+                                    class="material-symbols-outlined text-[14px] mx-4 text-outline">arrow_forward</span>
+                                <span class="flex gap-2">
+                                    <span
+                                        class="px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full label-text text-[10px] font-bold">$</span>
+                                    <span
+                                        class="px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full label-text text-[10px] font-bold">)</span>
+                                </span>
+                            </div>
+                            <div class="flex items-center border-b border-surface-container py-2">
+                                <span class="w-12 font-bold font-mono text-on-surface">E'</span>
+                                <span
+                                    class="material-symbols-outlined text-[14px] mx-4 text-outline">arrow_forward</span>
+                                <span class="flex gap-2">
+                                    <span
+                                        class="px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full label-text text-[10px] font-bold">$</span>
+                                    <span
+                                        class="px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full label-text text-[10px] font-bold">)</span>
+                                </span>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- LL(1) Parsing Table -->
+                <section
+                    class="bg-surface-container-lowest p-8 shadow-sm border border-outline-variant/10 overflow-hidden w-full">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="text-lg font-bold tracking-tight uppercase label-text text-primary">LL(1) Parsing
+                            Table</h2>
+                        <div class="flex gap-4 items-center">
+                            <span class="flex items-center gap-1 text-[10px] label-text uppercase text-outline">
+                                <span class="w-2 h-2 rounded-full bg-primary"></span> Non-Terminal
+                            </span>
+                            <span class="flex items-center gap-1 text-[10px] label-text uppercase text-outline">
+                                <span
+                                    class="w-2 h-2 rounded-full bg-secondary-container border border-outline-variant"></span>
+                                Terminal
+                            </span>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto" id="ll1-parsing-table">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr>
+                                    <th class="p-4 bg-surface-container-low border-b border-outline-variant"></th>
+                                    <th
+                                        class="p-4 bg-surface-container-low border-b border-outline-variant text-[11px] font-bold font-mono text-center">
+                                        id</th>
+                                    <th
+                                        class="p-4 bg-surface-container-low border-b border-outline-variant text-[11px] font-bold font-mono text-center">
+                                        +</th>
+                                    <th
+                                        class="p-4 bg-surface-container-low border-b border-outline-variant text-[11px] font-bold font-mono text-center">
+                                        *</th>
+                                    <th
+                                        class="p-4 bg-surface-container-low border-b border-outline-variant text-[11px] font-bold font-mono text-center">
+                                        (</th>
+                                    <th
+                                        class="p-4 bg-surface-container-low border-b border-outline-variant text-[11px] font-bold font-mono text-center">
+                                        )</th>
+                                    <th
+                                        class="p-4 bg-surface-container-low border-b border-outline-variant text-[11px] font-bold font-mono text-center">
+                                        $</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-xs font-mono">
+                                <tr class="group">
+                                    <td
+                                        class="p-4 font-bold border-b border-surface-container bg-surface-container-low/20 text-primary">
+                                        E</td>
+                                    <td class="p-4 border-b border-surface-container text-center">E → T E'</td>
+                                    <td
+                                        class="p-4 border-b border-surface-container text-center bg-error-container/5 text-error italic opacity-40">
+                                        err</td>
+                                    <td
+                                        class="p-4 border-b border-surface-container text-center bg-error-container/5 text-error italic opacity-40">
+                                        err</td>
+                                    <td class="p-4 border-b border-surface-container text-center">E → T E'</td>
+                                    <td
+                                        class="p-4 border-b border-surface-container text-center bg-error-container/5 text-error italic opacity-40">
+                                        err</td>
+                                    <td
+                                        class="p-4 border-b border-surface-container text-center bg-error-container/5 text-error italic opacity-40">
+                                        err</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- LR(0) VIEW -->
+        <div id="lr0-view" class="view-section hidden max-w-screen-2xl mx-auto px-12 py-12">
+            <div class="mb-12">
+                <h1 class="text-5xl font-extrabold tracking-tight text-on-surface mb-2 font-headline">LR(0) Parser
+                    Analysis</h1>
+                <p class="text-secondary max-w-2xl leading-relaxed font-body">Systematic construction of LR(0)
+                    collection of items and LR(0) canonical tables for bottom-up syntax analysis of context-free
+                    grammars.</p>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Grammar Input & Details -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Grammar Input -->
+                    <section
+                        class="bg-surface-container-lowest p-8 shadow-sm border border-outline-variant/10 flex flex-col h-full">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-bold tracking-tight uppercase label-text text-primary">Grammar Input
+                            </h2>
+                            <span class="material-symbols-outlined text-outline">edit_note</span>
+                        </div>
+                        <div class="flex-grow flex flex-col">
+                            <div class="relative flex-grow mb-4">
+                                <textarea id="lr0-grammar-input"
+                                    class="w-full h-80 bg-surface-container-low border-b-2 border-outline focus:border-primary focus:bg-surface-container-lowest transition-all p-4 font-mono text-sm leading-relaxed outline-none resize-none"
+                                    placeholder="E -> E + T&#10;E -> T&#10;T -> T * F&#10;T -> F&#10;F -> ( E )&#10;F -> id">E -> E + T&#10;E -> T&#10;T -> T * F&#10;T -> F&#10;F -> ( E )&#10;F -> id</textarea>
+                                <div class="absolute bottom-4 right-4 flex gap-2">
+                                    <button id="lr0-clear-btn"
+                                        class="bg-surface-container-high px-3 py-1 label-text text-[10px] font-bold uppercase tracking-tighter text-on-surface-variant hover:bg-surface-container-highest transition-colors">Clear</button>
+                                    <button id="lr0-process-btn"
+                                        class="bg-primary text-on-primary px-3 py-1 label-text text-[10px] font-bold uppercase tracking-tighter hover:bg-primary-dim transition-colors">Analyze</button>
+                                </div>
+                            </div>
+                            <p class="text-xs text-outline leading-relaxed mt-2">
+                                Enter productions in the form A -> α | β. Use uppercase letters (optionally with ′) for
+                                non-terminals and lowercase letters or symbols for terminals. Represent the empty string
+                                by ε.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Grammar Details -->
+                    <section class="bg-surface-container-lowest p-8 shadow-sm border border-outline-variant/10 h-full">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-bold tracking-tight uppercase label-text text-primary">Grammar
+                                Details</h2>
+                        </div>
+                        <div id="lr0-grammar-details" class="space-y-4">
+                            <div
+                                class="p-3 border border-outline-variant/20 flex justify-between items-center bg-surface-container-low/30">
+                                <span class="label-text text-xs font-bold uppercase text-outline">Start Symbol</span>
+                                <span class="font-mono text-sm font-bold text-primary">E</span>
+                            </div>
+                            <div
+                                class="p-3 border border-outline-variant/20 flex justify-between items-center bg-surface-container-low/30">
+                                <span class="label-text text-xs font-bold uppercase text-outline">Terminals</span>
+                                <div class="flex gap-1">
+                                    <span class="font-mono text-sm font-bold text-primary">+, *, (, ), id, $</span>
+                                </div>
+                            </div>
+                            <div
+                                class="p-3 border border-outline-variant/20 flex justify-between items-center bg-surface-container-low/30">
+                                <span class="label-text text-xs font-bold uppercase text-outline">Non-Terminals</span>
+                                <div class="flex gap-1">
+                                    <span class="font-mono text-sm font-bold text-primary">E, T, F</span>
+                                </div>
+                            </div>
+                            <div class="p-3 border border-outline-variant/20 bg-surface-container-low/30">
+                                <span class="label-text text-xs font-bold uppercase text-outline block mb-3">Augmented
+                                    grammar</span>
+                                <div
+                                    class="space-y-1 font-mono text-xs text-secondary pl-2 border-l-2 border-primary/20">
+                                    <div>E → E + T</div>
+                                    <div>E → T</div>
+                                    <div>T → T * F</div>
+                                    <div>T → F</div>
+                                    <div>F → ( E )</div>
+                                    <div>F → id</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- LR(0) collection of items -->
+                <section class="bg-surface-container-lowest p-8 shadow-sm border border-outline-variant/10">
+                    <div class="flex items-center justify-between mb-8">
+                        <div>
+                            <h2 class="text-lg font-bold tracking-tight uppercase label-text text-primary">LR(0)
+                                collection of items</h2>
+                            <p class="text-[11px] text-outline font-body mt-1 uppercase tracking-wide">Finite State
+                                Automaton of Grammar Item Sets</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <span class="p-2 text-outline">
+                                <span class="material-symbols-outlined text-xl">account_tree</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div id="lr0-item-sets" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Item Set Card Placeholder -->
+                        <div
+                            class="bg-surface-container-low/30 border-l-4 border-primary p-5 group hover:bg-surface-container-low transition-all">
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="label-text text-[10px] font-bold text-primary uppercase">State I₀</span>
+                                <span
+                                    class="material-symbols-outlined text-outline text-sm">settings_input_component</span>
+                            </div>
+                            <div class="font-mono text-xs space-y-1.5 text-on-surface-variant">
+                                <p>E' → <span class="text-primary font-bold">.</span> E</p>
+                                <p>E → <span class="text-primary font-bold">.</span> E + T</p>
+                                <p>E → <span class="text-primary font-bold">.</span> T</p>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-outline-variant/10 flex flex-wrap gap-2">
+                                <span
+                                    class="px-2 py-0.5 bg-surface-container-high/50 border border-outline-variant/20 rounded text-[10px] font-mono font-bold text-primary">E
+                                    → I₁</span>
+                                <span
+                                    class="px-2 py-0.5 bg-surface-container-high/50 border border-outline-variant/20 rounded text-[10px] font-mono font-bold text-primary">T
+                                    → I₂</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ACTION / GOTO Table -->
+                <section
+                    class="bg-surface-container-lowest p-8 shadow-sm border border-outline-variant/10 overflow-hidden w-full">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                        <div>
+                            <h2 class="text-lg font-bold tracking-tight uppercase label-text text-primary">ACTION / GOTO
+                                Table (Canonical LR(0) table)</h2>
+                            <p class="text-[11px] text-outline font-body mt-1 uppercase tracking-wide">Generated parsing
+                                operations based on LR(0) collection of items</p>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto" id="lr0-parsing-table">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-surface-container-low/50">
+                                    <th class="p-4 border-b-2 border-outline-variant/30 text-[10px] uppercase label-text font-bold text-on-surface"
+                                        rowspan="2">State</th>
+                                    <th class="p-4 border-b-2 border-outline-variant/30 text-[10px] uppercase label-text font-bold text-center border-l border-outline-variant/20"
+                                        colspan="6">ACTION</th>
+                                    <th class="p-4 border-b-2 border-outline-variant/30 text-[10px] uppercase label-text font-bold text-center border-l border-outline-variant/20"
+                                        colspan="3">GOTO</th>
+                                </tr>
+                                <tr class="bg-surface-container-low/30">
+                                    <th
+                                        class="p-2 text-center font-mono text-[11px] border-b border-outline-variant/20 border-l">
+                                        id</th>
+                                    <th
+                                        class="p-2 text-center font-mono text-[11px] border-b border-outline-variant/20">
+                                        +</th>
+                                    <th
+                                        class="p-2 text-center font-mono text-[11px] border-b border-outline-variant/20">
+                                        *</th>
+                                    <th
+                                        class="p-2 text-center font-mono text-[11px] border-b border-outline-variant/20">
+                                        (</th>
+                                    <th
+                                        class="p-2 text-center font-mono text-[11px] border-b border-outline-variant/20">
+                                        )</th>
+                                    <th
+                                        class="p-2 text-center font-mono text-[11px] border-b border-outline-variant/20">
+                                        $</th>
+                                    <th
+                                        class="p-2 text-center font-mono text-[11px] border-b border-outline-variant/20 border-l">
+                                        E</th>
+                                    <th
+                                        class="p-2 text-center font-mono text-[11px] border-b border-outline-variant/20">
+                                        T</th>
+                                    <th
+                                        class="p-2 text-center font-mono text-[11px] border-b border-outline-variant/20">
+                                        F</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-xs font-mono">
+                                <tr
+                                    class="border-b border-outline-variant/10 hover:bg-surface-container-low/20 transition-colors">
+                                    <td class="p-4 font-bold text-on-surface bg-surface-container-low/20">0</td>
+                                    <td
+                                        class="p-4 text-center text-primary font-bold border-l border-outline-variant/10">
+                                        s5</td>
+                                    <td class="p-4 text-center"></td>
+                                    <td class="p-4 text-center"></td>
+                                    <td class="p-4 text-center text-primary font-bold">s4</td>
+                                    <td class="p-4 text-center"></td>
+                                    <td class="p-4 text-center"></td>
+                                    <td
+                                        class="p-4 text-center font-bold text-secondary border-l border-outline-variant/20">
+                                        1</td>
+                                    <td class="p-4 text-center font-bold text-secondary">2</td>
+                                    <td class="p-4 text-center font-bold text-secondary">3</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full mt-auto border-t-0 bg-[#f7f9fb]">
+        <div class="flex flex-col md:flex-row justify-between items-center px-12 py-8 w-full max-w-screen-2xl mx-auto">
+            <div class="mb-4 md:mb-0">
+                <span
+                    class="font-['Space_Grotesk'] font-bold text-[#0D1B2A] uppercase tracking-wider text-sm">ParserGen</span>
+            </div>
+            <p class="font-['Space_Grotesk'] text-xs uppercase tracking-wider text-[#717c82] mb-4 md:mb-0">
+                © 2026 Parsergen. All rights reserved &amp; powered by re-collIDE team.
+            </p>
+            <div class="flex gap-8">
+                <a class="font-['Space_Grotesk'] text-xs uppercase tracking-wider text-[#717c82] hover:text-[#426086] transition-colors"
+                    href="https://github.com/re-collIDE/ParserGen/tree/main/documentation" target="_blank"
+                    rel="noopener noreferrer">Documentation</a>
+
+                <a class="font-['Space_Grotesk'] text-xs uppercase tracking-wider text-[#717c82] hover:text-[#426086] transition-colors"
+                    href="https://github.com/re-collIDE/ParserGen" target="_blank" rel="noopener noreferrer">Source</a>
+
+                <a id="license-btn" class="font-['Space_Grotesk'] text-xs uppercase tracking-wider text-[#717c82] hover:text-[#426086] transition-colors"
+                    href="#" rel="noopener noreferrer">License</a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="license-popup"
+        class="hidden fixed bottom-8 right-8 max-w-md bg-surface-container-lowest border-l-4 border-primary p-6 shadow-2xl z-[60] animate-fadeIn">
+        <button id="close-license" class="absolute top-4 right-4 text-on-surface-variant hover:text-error transition-colors">
+            <span class="material-symbols-outlined text-lg">close</span>
+        </button>
+        <div class="flex items-start gap-4 pr-6">
+            <span class="material-symbols-outlined text-primary text-2xl mt-1">gavel</span>
+            <div>
+                <h3 class="font-headline font-bold text-on-surface mb-2 uppercase text-xs tracking-widest">
+                    License Information</h3>
+                <p class="text-sm text-on-surface-variant leading-relaxed font-body">
+                    This project operates under a dual-license model to ensure the software remains open-source while
+                    maintaining the integrity of our instructional materials. Under this framework, <strong>all software
+                        code is licensed under the MIT License</strong>, while all associated documentation is governed
+                    by <strong>Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0)</strong>.
+                    While we actively encourage code modifications and redistribution, we do not allow the distribution
+                    of derivative versions of our documentation to ensure instructions remain accurate and consistent.
+                    For complete legal terms and conditions, please visit the official license section in our source
+                    repository.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Virtual Keyboard -->
+    <div id="virtual-keyboard"
+        class="hidden fixed right-12 top-20 flex flex-col gap-2 z-50 animate-fadeIn">
+        <button
+            class="kb-key w-10 h-10 bg-white shadow-lg rounded-xl flex items-center justify-center text-[#426086] font-bold text-lg hover:scale-110 transition-transform active:scale-95"
+            data-char="→">→</button>
+        <button
+            class="kb-key w-10 h-10 bg-white shadow-lg rounded-xl flex items-center justify-center text-[#426086] font-bold text-lg hover:scale-110 transition-transform active:scale-95"
+            data-char="|">|</button>
+        <button
+            class="kb-key w-10 h-10 bg-white shadow-lg rounded-xl flex items-center justify-center text-[#426086] font-bold text-lg hover:scale-110 transition-transform active:scale-95"
+            data-char="ε">ε</button>
+        <button
+            class="kb-key w-10 h-10 bg-white shadow-lg rounded-xl flex items-center justify-center text-[#426086] font-bold text-lg hover:scale-110 transition-transform active:scale-95"
+            data-char="•">•</button>
+        <button
+            class="kb-key w-10 h-10 bg-white shadow-lg rounded-xl flex items-center justify-center text-[#426086] font-bold text-lg hover:scale-110 transition-transform active:scale-95"
+            data-char="'">'</button>
+        <button
+            class="kb-key w-10 h-10 bg-white shadow-lg rounded-xl flex items-center justify-center text-[#426086] font-bold text-sm hover:scale-110 transition-transform active:scale-95"
+            data-char="id">id</button>
+        <button id="close-keyboard"
+            class="w-10 h-10 bg-red-50 border border-red-200 shadow-lg rounded-xl flex items-center justify-center text-red-600 font-bold text-lg hover:scale-110 transition-transform active:scale-95 mt-1">
+            <span class="material-symbols-outlined text-lg">close</span>
+        </button>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>

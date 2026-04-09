@@ -1,0 +1,50 @@
+/* Custom Styles for ParserGen */
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    vertical-align: middle;
+}
+body { font-family: 'Inter', sans-serif; }
+.label-text { font-family: 'Space Grotesk', sans-serif; }
+
+/* View Switching */
+.view-section {
+    display: none;
+    animation: fadeIn 0.3s ease-out;
+}
+.view-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Virtual Keyboard custom styles */
+.kb-key {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.kb-key:active {
+    transform: scale(0.95);
+}
+
+/* License Popup custom styles */
+#license-popup {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* Nav Active State (Handled by JS, but adding helper classes) */
+.nav-link {
+    border-bottom-width: 2px;
+    border-color: transparent;
+}
+.nav-link.active {
+    color: #426086;
+    border-color: #426086;
+    padding-bottom: 0.25rem;
+}
